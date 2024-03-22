@@ -1,12 +1,12 @@
 START TRANSACTION
 > OK
-> Time: 0.177s
+> Time: 0.176s
 
 
 SET
     @fecha_inicial = '2023-10-01'
 > OK
-> Time: 0.177s
+> Time: 0.175s
 
 
 /**
@@ -23,7 +23,7 @@ WHERE
     P.post_type = 'tc_tickets_instances'
     AND PM.meta_key = 'tc_checkins'
 > Affected rows: 0
-> Time: 0.175s
+> Time: 0.177s
 
 
 /**********************************
@@ -33,17 +33,17 @@ WHERE
  **********************************/
 DROP TABLE IF EXISTS wp_posts_orphan
 > OK
-> Time: 0.179s
+> Time: 0.181s
 
 
 CREATE TABLE wp_posts_orphan LIKE wp_posts
 > OK
-> Time: 0.183s
+> Time: 0.184s
 
 
 DROP TABLE IF EXISTS wp_postmeta_orphan
 > OK
-> Time: 0.178s
+> Time: 0.179s
 
 
 CREATE TABLE wp_postmeta_orphan LIKE wp_postmeta
@@ -53,12 +53,12 @@ CREATE TABLE wp_postmeta_orphan LIKE wp_postmeta
 
 DROP TABLE IF EXISTS wp_comments_orphan
 > OK
-> Time: 0.183s
+> Time: 0.182s
 
 
 CREATE TABLE wp_comments_orphan LIKE wp_comments
 > OK
-> Time: 0.187s
+> Time: 0.242s
 
 
 /* wp_postmeta -> wp_postmeta_orphan */
@@ -71,8 +71,8 @@ FROM
     LEFT JOIN wp_posts P ON PM.post_id = P.ID
 WHERE
     P.ID IS NULL
-> Affected rows: 0
-> Time: 3.617s
+> Affected rows: 789869
+> Time: 8.118s
 
 
 DELETE PM
@@ -81,8 +81,8 @@ FROM
     LEFT JOIN wp_posts P ON PM.post_id = P.ID
 WHERE
     P.ID IS NULL
-> Affected rows: 0
-> Time: 3.993s
+> Affected rows: 789869
+> Time: 7.973s
 
 
 /** wp_comments -> wp_comments_orphan */
@@ -95,8 +95,8 @@ FROM
     LEFT JOIN wp_posts P ON C.comment_post_ID = P.ID
 WHERE
     P.ID IS NULL
-> Affected rows: 0
-> Time: 0.511s
+> Affected rows: 2969
+> Time: 0.497s
 
 
 --
@@ -106,8 +106,8 @@ FROM
     LEFT JOIN wp_posts P ON C.comment_post_ID = P.ID
 WHERE
     P.ID IS NULL
-> Affected rows: 0
-> Time: 0.440s
+> Affected rows: 2969
+> Time: 0.473s
 
 
 /** wp_posts.post_parent -> wp_posts_orphan */
@@ -124,8 +124,8 @@ WHERE
         P.post_parent <> 0
         AND P.post_parent IS NOT NULL
     )
-> Affected rows: 0
-> Time: 0.435s
+> Affected rows: 75
+> Time: 0.724s
 
 
 DELETE P
@@ -138,8 +138,8 @@ WHERE
         P.post_parent <> 0
         AND P.post_parent IS NOT NULL
     )
-> Affected rows: 0
-> Time: 0.594s
+> Affected rows: 75
+> Time: 0.597s
 
 
 /**********************************
@@ -149,22 +149,22 @@ WHERE
  **********************************/
 DROP TABLE IF EXISTS wp_posts_history
 > OK
-> Time: 0.142s
+> Time: 0.141s
 
 
 CREATE TABLE wp_posts_history LIKE wp_posts
 > OK
-> Time: 0.185s
+> Time: 0.183s
 
 
 DROP TABLE IF EXISTS wp_postmeta_history
 > OK
-> Time: 0.179s
+> Time: 0.180s
 
 
 CREATE TABLE wp_postmeta_history LIKE wp_postmeta
 > OK
-> Time: 0.182s
+> Time: 0.185s
 
 
 DROP TABLE IF EXISTS wp_comments_history
@@ -174,7 +174,7 @@ DROP TABLE IF EXISTS wp_comments_history
 
 CREATE TABLE wp_comments_history LIKE wp_comments
 > OK
-> Time: 0.219s
+> Time: 0.197s
 
 
 /** wp_postmeta -> wp_postmeta_history */
@@ -202,7 +202,7 @@ WHERE
         OR P.post_type = 'pos_receipt'
     )
 > Affected rows: 5399918
-> Time: 33.586s
+> Time: 35.707s
 
 
 DELETE PM
@@ -226,7 +226,7 @@ WHERE
         OR P.post_type = 'pos_receipt'
     )
 > Affected rows: 5399918
-> Time: 33.741s
+> Time: 34.082s
 
 
 /** wp_comments -> wp_comments_history */
@@ -240,7 +240,7 @@ FROM
 WHERE
     P.post_date < @fecha_inicial
 > Affected rows: 233868
-> Time: 2.813s
+> Time: 2.675s
 
 
 DELETE C
@@ -250,7 +250,7 @@ FROM
 WHERE
     P.post_date < @fecha_inicial
 > Affected rows: 233868
-> Time: 2.024s
+> Time: 2.118s
 
 
 /** wp_posts -> wp_posts_history */
@@ -277,7 +277,7 @@ WHERE
         OR P.post_type = 'pos_receipt'
     )
 > Affected rows: 311001
-> Time: 2.987s
+> Time: 3.072s
 
 
 DELETE P
@@ -301,7 +301,7 @@ WHERE
         OR P.post_type = 'pos_receipt'
     )
 > Affected rows: 311001
-> Time: 9.840s
+> Time: 9.826s
 
 
 /**********************************
@@ -317,7 +317,7 @@ FROM
 WHERE
     P.ID IS NULL
 > Affected rows: 36533
-> Time: 0.431s
+> Time: 0.435s
 
 
 DELETE OI,
@@ -329,7 +329,7 @@ FROM
 WHERE
     PM.ID IS NULL
 > Affected rows: 1911159
-> Time: 13.289s
+> Time: 13.133s
 
 
 DELETE UM
@@ -339,7 +339,7 @@ FROM
 WHERE
     U.ID IS NULL
 > Affected rows: 60
-> Time: 0.574s
+> Time: 0.508s
 
 
 /**********************************
@@ -350,23 +350,23 @@ WHERE
 ALTER TABLE
     wp_posts ENGINE = INNODB
 > OK
-> Time: 0.475s
+> Time: 0.535s
 
 
 ALTER TABLE
     wp_postmeta ENGINE = INNODB
 > OK
-> Time: 3.600s
+> Time: 3.704s
 
 
 ALTER TABLE
     wp_comments ENGINE = INNODB
 > OK
-> Time: 0.357s
+> Time: 0.317s
 
 
 COMMIT
 > OK
-> Time: 0.133s
+> Time: 0.134s
 
 
