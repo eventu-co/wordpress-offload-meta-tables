@@ -63,7 +63,6 @@ FROM
 WHERE
     P.ID IS NULL;
 
---
 DELETE C
 FROM
     wp_comments C
